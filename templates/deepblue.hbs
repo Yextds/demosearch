@@ -1,0 +1,289 @@
+---
+{
+"urlFormat": "index.html"
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{name}}</title>
+    <meta name="description" content={{richTextDescription}}>
+    {{>head}}
+   
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+    <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
+    <script src="https://assets.sitescdn.net/answers/v1/answers.js"></script>
+    <script src="../src/index.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="https://assets.sitescdn.net/answers/v1/answers.css" />
+    <style>
+        .answers-layout {
+            max-width: 50rem;
+            margin: auto;
+        }
+
+        .directanswer-container {
+            margin-top: 1rem;
+        }
+    </style>
+    <script>
+        function formatDirectAnswer(fieldName, fieldType, value) {
+            if (fieldType == "phone") {
+                return value
+
+            }
+            return value;
+        }
+    </script>
+</head>
+
+<body>
+ <div class="searchbar-container"></div>
+ <div class="directanswer-container"></div>
+ <div class="vertical-container"></div>
+
+
+
+
+
+
+<script>
+
+/*Infowindow code ends here*/
+
+  ANSWERS.init({
+    apiKey: "sandbox-c60cbe94e016d1e3c9e6939885a56b0c",
+    experienceKey: "demosearch",
+    businessId: "3145037",
+    experienceVersion: "STAGING",
+    verticalKey: "dotsquares_locatins_details",
+
+    search: {
+      verticalKey: "dotsquares_locatins_details",
+      defaultInitialSearch: "doctors ",
+      limit: 10
+    },
+    onReady: function () {
+
+
+
+
+
+
+
+      // init components
+      this.addComponent("SearchBar", {
+        container: ".searchbar-container",
+        allowEmptySearch: true,
+        verticalKey: "dotsquares_locatins_details",
+        // searchText: "Search",
+        // query: "Peaceful Coffee",
+        // filter: {
+        //     name: {
+        //         $eq: "Peaceful Coffee"
+        //     }
+        // },
+
+        searchParameters: {
+          // List of fields to query for
+          sectioned: true,
+          fields: [
+            {
+              fieldId: "builtin.location",
+              entityTypeId: "location"
+            },
+            {
+              fieldId: "name",
+              entityTypeId: "location"
+            }
+          ]
+        },
+
+
+
+
+
+
+        geolocationOptions: {
+          timeout: 500,
+          maximumAge: 300000,
+          enableHighAccuracy: false
+        },
+        placeholderText: "Search for hospitals",
+        geolocationTimeoutAlert: {
+          enabled: true,
+          message: "We are unable to determine your location"
+        }
+
+
+
+
+
+      });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      this.addComponent("Navigation", {
+        container: ".navigation-container",
+      });
+
+
+      this.addComponent("DirectAnswer", {
+        container: ".directanswer-container",
+        viewDetailsText: "View Details!",
+
+        transformData: (data) => {
+          //data has fieldName, fieldType, value
+          return {
+            ...data,
+            answer: {
+              ...data.answer,
+              value: formatDirectAnswer(data.answer.fieldName, data.answer.fieldType, data.answer.value, data.answer.value.line1, data.answer.value.region, data.answer.value.postalCode, data.answer.value.countryCode, data.answer.value.city, data.answer.slug)
+
+              // console.log(data.answer.value.line1),
+              // console.log(data.answer.value.region),
+              // console.log(data.answer.value.postalCode),
+
+              // document.write(data.answer.value.line1),
+              // document.write(data.answer.value.region),
+              // document.write(data.answer.value.postalCode),
+
+
+              // $("#demo").innerHTML = data.answer.value.line1 ,
+              // var a = data.answer.value.postalCode;
+
+
+
+            }
+          };
+        },
+      });
+
+   
+
+      this.addComponent("VerticalResults", {
+        container: ".vertical-container",
+
+        verticalKey: "dotsquares_locatins_details",
+        card: {
+          cardType: "Standard",
+          dataMappings: {
+            title: (item) => item.name,
+
+
+            subtitle: (item) => "<span style='color:blue; font-size:16px;'>" + "Rating:-" + "</span>" + item.c_rating + "<br>" +
+
+              "<span style='color:blue; font-size:16px;'>" + "Address:-" + "</span>" + item.address.line1 + "<br>"
+              + item.address.city + "<br>" + item.address.region + " " + item.address.postalCode + "<br>" +
+
+
+
+              "<span style='color:blue; font-size:16px;'>" + "Phone:-" + "</span>" + item.mainPhone + "<br>" + "<br>" + "<p style='color:blue; font-size:16px;'>" + "Details" + "</p>",
+
+
+            // subtitle: (item) => item.c_rating + "<br>" + item.address.line1 + "<br>" + item.address.city + "<br>"
+            //   + item.address.region + item.address.postalCode +
+            //   "<br>" + item.mainPhone,
+
+            image: (item) =>
+              item.photoGallery ? item.photoGallery[0].image.url : null,
+            url: (item) => item.slug
+          },
+          callsToAction: [
+            {
+              label: "Get Directions",
+              icon: "directions",
+              url: (item) => 'https://www.google.com/maps/dir/?api=1&destination=' + `${item.address.line1}`,
+              analyticsEventType: "GET_DIRECTIONS",
+              target: "_self"
+            },
+            {
+              label: "Call",
+              icon: "phone",
+              url: (item) => `tel:${item.mainPhone}`,
+              analyticsEventType: "TAP_TO_CALL"
+            }
+          ]
+        },
+        noResults: {
+          displayAllResults: true
+        },
+
+        // template: "this is a pagination demo"
+      });
+
+      
+
+   
+    }
+  });
+</script>
+<script>
+
+
+
+  // var output = data.answer.value.line1;
+  // console.log(output);
+
+
+  function formatDirectAnswer(fieldName, fieldType, value, line1, region, postalCode, countryCode, city, slug) {
+    if (fieldType == "address") {
+      console.log(slug);
+      var newFilter = (line1 + '<br>' + region + ' ' + city + '<br>' + countryCode + '<br>' + postalCode);
+      //console.log(slug);
+      return newFilter;
+      //return region;
+      //return postalCode;
+    }
+
+
+    return value;
+  }
+</script>
+<script>
+    function formatDirectAnswer(fieldName, fieldType, value, line1, region, postalCode, countryCode, city, slug, question, answer) {
+        if (fieldType == "address") {
+            var newFilter = (line1 + '<br>' + region + ' ' + city + '<br>' + countryCode + '<br>' + postalCode);
+            return newFilter;
+
+        }
+
+        else if (fieldName == "") {
+            fieldName = answer
+            // var answer = (line1 + '<br>' + region + ' ' + city + '<br>' + countryCode + '<br>' + postalCode);
+            return answer;
+        }
+
+
+        else if (fieldType == "c_related1") {
+
+            var Filter = (line1 + '<br>' + region + ' ' + city + '<br>' + countryCode + '<br>' + postalCode);
+            return Filter;
+        }
+
+
+        else {
+            return value;
+        }
+    }
+</script>
+
+</body>
+
+</html>

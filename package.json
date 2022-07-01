@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve",
+    "build": "echo This is a static template, there is no bundler or bundling involved!"
+  },
+  "repository": {
+    "url": "git+https://github.com/codesandbox-app/static-template.git",
+    "type": "git"
+  },
+  "name": "verticalpages",
+  "main": "index.html",
+  "license": "MIT",
+  "keywords": [],
+  "homepage": "https://github.com/codesandbox-app/static-template#readme",
+  "devDependencies": {
+    "serve": "^11.2.0"
+  },
+  "description": "",
+  "bugs": {
+    "url": "https://github.com/codesandbox-app/static-template/issues"
+  },
+  "author": "Ives van Hoorne"
+}
